@@ -1,7 +1,6 @@
 package git.angara.appodeal_test;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,16 +30,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(!preferences.getBoolean("init" , false))
-        {
-            Appodeal.disableLocationPermissionCheck();
-            Appodeal.confirm(Appodeal.SKIPPABLE_VIDEO);
-            Appodeal.initialize(this, appKey, Appodeal.NATIVE);
-           preferences.edit().putBoolean("init" , true).commit();
-        }
+        Appodeal.disableLocationPermissionCheck();
+        Appodeal.confirm(Appodeal.SKIPPABLE_VIDEO);
+        Appodeal.initialize(this, appKey, Appodeal.NATIVE);
+        Appodeal.setLogLevel(com.appodeal.ads.utils.Log.LogLevel.debug);
 
         Appodeal.setNativeCallbacks(new NativeCallbacks() {
             @Override
@@ -81,18 +74,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         });
-        Appodeal.setLogLevel(com.appodeal.ads.utils.Log.LogLevel.debug);
-
-
 
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("init" , false).commit();
-    }
 
     @Override
     protected void onResume() {
